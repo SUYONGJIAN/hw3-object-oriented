@@ -16,15 +16,19 @@ th{
 	padding-right: 30px;
 }
 
-.alternate {
-	background-color: #C8C8C8;
-}
-.even{
-	background-color: #C8C8C8;
-}
 td, tr, th{
 	padding-left: 3px;
 	padding-right: 5px;
 	border : 1px solid #909090;
+}
+tr:nth-child(2n) {
+	background-color: #C8C8C8;
+}
+
+input {
+	overflow:hidden;
+	border-right: 1px solid gray;
+	border-bottom: 1px solid gray;
+	margin-bottom: 3px;
 }
 

@@ -1,19 +1,6 @@
-window.onload = function() {
-	extend(Base, Derived);
-	//1
-	example = new Derived('example');
-	Derived.staticMethod();
-	example.instanceMethod();
-	//2
-	example = new Derived('example');
-	otherExample = new Derived('other-example');
-	Derived.staticMethod();
-	example.instanceMethod();
-	otherExample.instanceMethod();
-}
 //基类Base
-function Base(name) {
-	this.instanceVariable = name;  //实例变量通过constructor初始化
+function Base(variable) {
+	this.instanceVariable = variable;  //实例变量通过constructor初始化
 }
 
 //类变量：staticVariable = 'Base'
@@ -28,21 +15,40 @@ Base.prototype.instanceMethod = function() {
 }
 
 //派生类Derived
-function Derived(name) {
-	this.instanceVariable = name;   //实例变量：instanceVariable，通过constructor初始化
+function Derived(variable) {
+	this.instanceVariable = variable;   //实例变量：instanceVariable，通过constructor初始化
 }
+
 //类变量：staticVariable = 'Derived'
 Derived.staticVariable = 'Derived';
 
 //继承方法function extend(base, derived)
 function extend(base, derived) {
-//类方法：staticMethod ，运行时，先调用Base的staticMethod，然后输出："This is from Derived class static-method, static-variable is: " + staticVariable
-derived.staticMethod = function() {
-	base.staticMethod.call(this, derived.staticVariable);
-	document.write("This is from Derived class static-method, static-variable is: " + this.staticVariable + "<br>");
+
+	//类方法：staticMethod ，运行时，先调用Base的staticMethod，然后输出："This is from Derived class static-method, static-variable is: " + staticVariable
+	derived.staticMethod = function() {
+		base.staticMethod.call(this, derived.staticVariable);
+		document.write("This is from Derived class static-method, static-variable is: " + this.staticVariable + "<br>");
+	}
+
+	//instanceMethod，运行时，先调用Base的instanceMethod，然后输出：输出："This is from Derived class instance-method, instance-variable is: " + instanceVariable
+	derived.prototype.instanceMethod = function() {
+		base.prototype.instanceMethod.call(this);
+		document.write("This is from Derived class instance-method, instance-variable is: " + this.instanceVariable + "<br>");
+	}
 }
-//instanceMethod，运行时，先调用Base的instanceMethod，然后输出：输出："This is from Derived class instance-method, instance-variable is: " + instanceVariable
-derived.prototype.instanceMethod = function() {
-	base.prototype.instanceMethod.call(this);
-	document.write("This is from Derived class instance-method, instance-variable is: " + this.instanceVariable + "<br>");
+
+//See in the object.html
+window.onload = function() {
+	extend(Base, Derived);
+	//1
+	example = new Derived('example');
+	Derived.staticMethod();
+	example.instanceMethod();
+	//2
+	example = new Derived('example');
+	otherExample = new Derived('other-example');
+	Derived.staticMethod();
+	example.instanceMethod();
+	otherExample.instanceMethod();
 }

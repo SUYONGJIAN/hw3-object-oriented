@@ -8,17 +8,17 @@ function getAllTables() {
 }
 
 function makeAllTablesFilterable(tables) {
-	for (var l = 0; l < tables.length; l++) { 
+	for (var l = 0; l < tables.length; l++) {
 		var input = document.createElement("input");
-		tables[l].appendChild(input);
-		tables[l].lastChild.placeholder = "Fiterable Key";
-		tables[l].lastChild.addEventListener("input", Filter);
+		input.placeholder= "Enter a Filter Key:"
+		tables[l].parentNode.insertBefore(input, tables[l]);
+		input.addEventListener("input", Filter);
 	}
 }
 
 function Filter() {
 	var s = this.value;
-	var table = this.parentNode;
+	var table = this.nextSibling;
 	var swap = table;
 	this.placeholder = "";
 	remoteHightlight(table);
@@ -27,12 +27,8 @@ function Filter() {
 			if (table.rows[l].innerHTML.match(s)) {
 				table.rows[l].style.display = '';
 				for(var c = 0; c <table.rows[l].cells.length; c++) {
-					cellValue = table.rows[l].cells[c].innerHTML;
-					position = cellValue.search(s);
-					var former = string(0,  position, cellValue);
-					var key = string(position,  position + s.length, cellValue);
-					var latter = string(position + s.length,  cellValue.length, cellValue);
-					table.rows[l].cells[c].innerHTML = former + "<font color=red>" + key + "</font>"+ latter;
+					var reg = new RegExp(s, 'g');
+					table.rows[l].cells[c].innerHTML = table.rows[l].cells[c].innerHTML.replace(reg, '<span style=\"background-color: red;\">'+s+'</span>');
 				}
 			} else {
 				table.rows[l].style.display = "none";
@@ -47,16 +43,8 @@ function remoteHightlight(table) {
 	for (var l = 1; l < table.rows.length; l++) {
 		table.rows[l].style.display= '';
 		for (var c = 0; c < table.rows[l].cells.length; c++) {
-			var temp = table.rows[l].cells[c].innerHTML.replace(/<.+?>/gim,'');
+			var temp = table.rows[l].cells[c].innerHTML.replace(/<\/?span[^>]*>/gi, "");
 			table.rows[l].cells[c].innerHTML = temp;
 		}
-			
 	};
-}
-function string(num1, num2, content) {
-	var str = "";
-	for(var num = num1; num < num2; num++) {
-		str += content.charAt(num);
-	}
-	return str;
 }
